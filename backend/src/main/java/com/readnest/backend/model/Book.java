@@ -28,9 +28,6 @@ public class Book {
         this.totalPages = totalPages;
     }
 
-    // Getters & Setters
-    // Right-click → Generate → Getter & Setter → Select All → OK
-
     public Long getId() {
         return id;
     }
