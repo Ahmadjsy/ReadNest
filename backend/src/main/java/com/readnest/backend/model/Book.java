@@ -9,15 +9,22 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(length = 512)
     private String title;
+    @Column(length = 512)
     private String author;
+    @Column(length = 512)
     private String category;
+    @Column(columnDefinition = "TEXT")
+    private String description;
     private int totalPages;
     private int pagesRead;
+    @Column(columnDefinition = "TEXT")
     private String notes;
     private int rating;
-
+    @Column(length = 2048)
+    private String coverUrl;
+    private String readingStatus;
     // Constructors
     public Book() {}
 
@@ -75,7 +82,13 @@ public class Book {
     public void setPagesRead(int pagesRead) {
         this.pagesRead = pagesRead;
     }
-
+    public String getDescription() {
+        return description;
+    }
+    
+    public void setDescription(String description) {
+        this.description = description;
+    }
     public String getNotes() {
         return notes;
     }
@@ -91,4 +104,18 @@ public class Book {
     public void setRating(int rating) {
         this.rating = rating;
     }
+    public String getCoverUrl() {
+        return coverUrl;
+    }
+    
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
+    }
+    public String getReadingStatus() {
+        return readingStatus;
+    }
+    
+    public void setReadingStatus(String readingStatus) {
+        this.readingStatus = readingStatus;
+    }    
 }
