@@ -1,0 +1,24 @@
+<h3>Add a Book</h3>
+<form (ngSubmit)="submitBook()">
+    <h3>Lookup Book by ISBN or Title</h3>
+<label>
+  <input [(ngModel)]="searchQuery" name="searchQuery" placeholder="Enter ISBN or title" />
+</label>
+<button type="button" (click)="fetchBookInfo()">Fetch Book</button>
+  <label>Title: <input [(ngModel)]="newBook.title" name="title"></label><br>
+  <label>Author: <input [(ngModel)]="newBook.author" name="author"></label><br>
+  <label>Category: <input [(ngModel)]="newBook.category" name="category"></label><br>
+  <label>Description:</label> <textarea [(ngModel)]="newBook.description" name="description" rows="3"></textarea><br>
+  <label>Total Pages: <input type="number" [(ngModel)]="newBook.totalPages" name="totalPages"></label><br>
+  <label>Pages Read: <input type="number" [(ngModel)]="newBook.pagesRead" name="pagesRead"></label><br>
+  <label>Notes: <textarea [(ngModel)]="newBook.notes" name="notes"></textarea></label><br>
+  <label>Rating: <input type="number" [(ngModel)]="newBook.rating" name="rating" min="0" max="5"></label><br>
+  <label>Reading Status: <select [(ngModel)]="newBook.readingStatus" name="readingStatus">
+      <option value="Unread">Unread</option>
+      <option value="Reading">Reading</option>
+      <option value="Read">Read</option>
+    </select>
+  </label><br>
+  
+  <button type="submit">Add Book</button>
+</form>
