@@ -22,16 +22,20 @@ public class BookService {
     }
 
     public Book updateBook(Long id, Book bookDetails) {
-        Book book = bookRepository.findById(id).orElseThrow();
-        book.setTitle(bookDetails.getTitle());
-        book.setAuthor(bookDetails.getAuthor());
-        book.setCategory(bookDetails.getCategory());
-        book.setTotalPages(bookDetails.getTotalPages());
-        book.setPagesRead(bookDetails.getPagesRead());
-        book.setNotes(bookDetails.getNotes());
-        book.setRating(bookDetails.getRating());
-        return bookRepository.save(book);
-    }
+    Book book = bookRepository.findById(id).orElseThrow();
+    book.setTitle(bookDetails.getTitle());
+    book.setAuthor(bookDetails.getAuthor());
+    book.setCategory(bookDetails.getCategory());
+    book.setTotalPages(bookDetails.getTotalPages());
+    book.setPagesRead(bookDetails.getPagesRead());
+    book.setNotes(bookDetails.getNotes());
+    book.setDescription(bookDetails.getDescription());
+    book.setCoverUrl(bookDetails.getCoverUrl());
+    book.setReadingStatus(bookDetails.getReadingStatus());
+    book.setReReadability(bookDetails.getReReadability());
+    return bookRepository.save(book);
+}
+
 
     public void deleteBook(Long id) {
         bookRepository.deleteById(id);

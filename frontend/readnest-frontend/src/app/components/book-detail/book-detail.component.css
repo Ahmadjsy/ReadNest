@@ -1,0 +1,83 @@
+.book-detail-form {
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .book-detail-form h2 {
+    margin-top: 0;
+    font-size: 1.6rem;
+  }
+  
+  label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: 600;
+  }
+  
+  input[type="text"],
+  input[type="number"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.6rem;
+    font-size: 1rem;
+    margin-top: 0.4rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+  }
+  
+  textarea {
+    resize: vertical;
+  }
+  
+  .cover {
+    display: block;
+    margin: 1.5rem auto;
+    max-width: 150px;
+    border-radius: 6px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+  }
+  
+  .button-group {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 20px;
+  }
+  
+  .button-group button {
+    padding: 10px 24px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .button-group button:first-child {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .button-group .delete-button {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .book-description {
+    white-space: pre-wrap;
+    overflow: visible;
+    text-overflow: unset;
+    display: block;
+    background: #f9f9f9;
+    padding: 12px;
+    border-radius: 6px;
+    line-height: 1.6;
+  }
+  
+  

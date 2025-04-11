@@ -1,31 +1,21 @@
-<label>
-  Filter by Reading Status:
-  <select [(ngModel)]="statusFilter">
-    <option value="">All</option>
-    <option value="Unread">Unread</option>
-    <option value="Reading">Reading</option>
-    <option value="Read">Read</option>
-  </select>
-</label>
+<h2>ReadNest</h2>
 
-<h2>Book List</h2>
-
-<ul style="list-style: none; padding: 0;">
-  <li *ngFor="let book of filteredBooks" style="display: flex; align-items: flex-start; margin-bottom: 15px;">
+<div class="bookshelf">
+  <div
+    class="book"
+    *ngFor="let book of books"
+    [routerLink]="['/book', book.id]"
+    title="{{ book.title }}"
+  >
     <img
       *ngIf="book.coverUrl"
       [src]="book.coverUrl"
-      alt="Cover"
-      width="60"
+      [alt]="book.title"
       [style.filter]="book.readingStatus === 'Unread' ? 'grayscale(100%)' : 'none'"
-      style="vertical-align: middle; margin-right: 8px;"
     />
-    <div>
-      <strong>{{ book.title }}</strong> by {{ book.author }} <button (click)="editBook(book)">Edit</button> <button (click)="deleteBook(book.id!)">Delete</button>
-      <br />
-      <em>Status: {{ book.readingStatus }}</em><br />
-      <small>{{ book.category }}</small><br />
-      <em *ngIf="book.description">{{ book.description }}</em>
-    </div>
-  </li>
-</ul>
+    <div class="book-title">{{ book.title }}</div>
+  </div>
+</div>
+<a [routerLink]="['/add']" class="floating-add-button" title="Add a new book">
+  ➕
+</a>

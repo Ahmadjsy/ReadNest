@@ -21,10 +21,10 @@ public class Book {
     private int pagesRead;
     @Column(columnDefinition = "TEXT")
     private String notes;
-    private int rating;
     @Column(length = 2048)
     private String coverUrl;
     private String readingStatus;
+    private Integer reReadability;
     // Constructors
     public Book() {}
 
@@ -96,14 +96,6 @@ public class Book {
     public void setNotes(String notes) {
         this.notes = notes;
     }
-
-    public int getRating() {
-        return rating;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
     public String getCoverUrl() {
         return coverUrl;
     }
@@ -117,5 +109,12 @@ public class Book {
     
     public void setReadingStatus(String readingStatus) {
         this.readingStatus = readingStatus;
+    }    
+    public Integer getReReadability() {
+        return reReadability;
+    }
+    
+    public void setReReadability(Integer reReadability) {
+        this.reReadability = reReadability;
     }    
 }

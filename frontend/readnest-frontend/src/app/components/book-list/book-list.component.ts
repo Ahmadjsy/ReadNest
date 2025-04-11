@@ -4,11 +4,12 @@ import { Book } from '../../book';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Output, EventEmitter } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-book-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './book-list.component.html',
   styleUrls: ['./book-list.component.css']
 })

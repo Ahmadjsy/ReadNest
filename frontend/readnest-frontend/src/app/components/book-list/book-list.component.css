@@ -1,0 +1,46 @@
+.bookshelf {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 1rem;
+    justify-content: center;
+  }
+  
+  .book {
+    width: 100px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .book:hover {
+    transform: scale(1.05);
+  }
+  
+  .book img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .book-title {
+    font-size: 0.8rem;
+    margin-top: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .floating-add-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    font-size: 24px;
+    text-decoration: none;
+    background: #609fe2;
+    color: white;
+    padding: 12px 12px;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+  

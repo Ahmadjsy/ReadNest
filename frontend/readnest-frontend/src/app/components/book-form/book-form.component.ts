@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BookService } from '../../services/book.service';
 import { Book } from '../../book';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-book-form',
   standalone: true,
@@ -26,11 +26,12 @@ export class BookFormComponent implements OnChanges {
     pagesRead: 0,
     description: '',
     notes: '',
-    rating: 0,
     readingStatus: 'Unread'
   };
 
-  constructor(private bookService: BookService) {}
+  constructor(
+    private bookService: BookService,
+    private router: Router) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['editingBook'] && this.editingBook) {
@@ -39,12 +40,17 @@ export class BookFormComponent implements OnChanges {
   }
 
   submitBook(): void {
+    if (!this.newBook.title || !this.newBook.author || !this.newBook.totalPages) {
+      alert('Please fetch and fill in the book details before adding.');
+      return;
+    }
     if (this.newBook.id) {
       // Edit existing book
       this.bookService.updateBook(this.newBook).subscribe({
         next: (book) => {
           console.log('Book updated:', book);
           alert('Book updated successfully!');
+          this.router.navigate(['/']);
         },
         error: (err) => {
           console.error('Error updating book:', err);
@@ -57,6 +63,7 @@ export class BookFormComponent implements OnChanges {
         next: (book) => {
           console.log('Book added:', book);
           alert('Book added successfully!');
+          this.router.navigate(['/']);
         },
         error: (err) => {
           console.error('Error adding book:', err);
@@ -95,7 +102,7 @@ export class BookFormComponent implements OnChanges {
         this.newBook.author = book.authors?.[0] || 'Unknown Author';
         this.newBook.totalPages = book.pageCount || 0;
         this.newBook.category = book.categories?.[0] || 'Uncategorized';
-        this.newBook.description = book.description || '';
+        this.newBook.description = (book.description || '').replace(/\.\.\.$/, '').trim();
         this.newBook.coverUrl = book.imageLinks?.thumbnail || '';
         console.log('Cover URL:', this.newBook.coverUrl);
       })
@@ -104,4 +111,39 @@ export class BookFormComponent implements OnChanges {
         alert('Failed to fetch book info.');
       });
   }
+  onSearchEnter(event: any): void {
+    event.preventDefault(); // Stop form submission
+    this.fetchBookInfo();   // Fetch book info instead
+  }
+  previewUrl: string | ArrayBuffer | null = null;
+
+  onImageSelected(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.previewUrl = reader.result;
+        this.newBook.coverUrl = reader.result as string;  // store base64 in book object
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+  resetForm(): void {
+    this.newBook = {
+      title: '',
+      author: '',
+      category: '',
+      totalPages: 0,
+      pagesRead: 0,
+      description: '',
+      notes: '',
+      coverUrl: '',
+      readingStatus: 'Unread',
+      reReadability: 0
+    };
+    this.searchQuery = '';
+    this.previewUrl = null;
+    this.editingBook = null;
+  }
+  
 }

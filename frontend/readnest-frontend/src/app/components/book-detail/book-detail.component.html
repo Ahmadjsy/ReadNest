@@ -1,0 +1,50 @@
+<form *ngIf="book" class="book-detail-form">
+    <h2>
+        {{ book.title }}
+    </h2>
+
+    <p>
+        <strong>Author:</strong> {{ book.author }}
+    </p>
+  
+    <label>Category:
+      <input [(ngModel)]="book.category" name="category" />
+    </label>
+  
+    <label>Status:
+      <select [(ngModel)]="book.readingStatus" name="readingStatus">
+        <option value="Unread">Unread</option>
+        <option value="Reading">Reading</option>
+        <option value="Read">Read</option>
+      </select>
+    </label>
+  
+    <p>
+        <strong>Total Pages:</strong> {{ book.totalPages }}
+    </p>
+  
+    <label>Pages Read:
+      <input type="number" [(ngModel)]="book.pagesRead" name="pagesRead" />
+    </label>
+  
+    <label>Re-readability (0–10):
+        <input type="number" [(ngModel)]="book.reReadability" name="reReadability" min="0" max="10" />
+    </label>
+  
+    <label>Description:
+        <p class="book-description">{{ book.description }}</p>
+    </label>
+  
+    <label>Notes:
+      <textarea [(ngModel)]="book.notes" name="notes" rows="4"></textarea>
+    </label>
+  
+    <img *ngIf="book.coverUrl" [src]="book.coverUrl" [alt]="book.title" class="cover" />
+
+    <div class="button-group">
+        <button (click)="saveChanges()">Save</button>
+        <button type="button" (click)="deleteBook()" class="delete-button">Delete</button>
+    </div>
+
+  </form>
+  
