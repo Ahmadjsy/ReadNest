@@ -70,4 +70,6 @@ body.dark-mode {
     opacity: 0.9;
     transform: scale(1.02);
   }
-  
+  body {
+    background-color: rgba(248, 219, 183, 0.93);
+}

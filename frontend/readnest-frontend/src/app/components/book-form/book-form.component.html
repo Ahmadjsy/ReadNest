@@ -11,6 +11,16 @@
   </label>
 
   <button type="button" (click)="fetchBookInfo()">Fetch Book</button>
+  <div *ngIf="showSearchResults" class="search-results">
+    <p>Select a book:</p>
+    <div class="result-item" *ngFor="let result of searchResults" (click)="selectSearchResult(result)">
+      <img [src]="getBestImageLink(result.volumeInfo)" alt="Book Cover" />
+      <div class="info">
+        <div class="title">{{ result.volumeInfo.title }}</div>
+        <div class="author">by {{ result.volumeInfo.authors?.[0] || 'Unknown Author' }}</div>
+      </div>
+    </div>
+  </div>
 
   <label>Title:
     <input [(ngModel)]="newBook.title" name="title" />
@@ -29,11 +39,11 @@
   </label>
 
   <label>Total Pages:
-    <input type="number" [(ngModel)]="newBook.totalPages" name="totalPages" />
+    <input type="number" [(ngModel)]="newBook.totalPages" name="totalPages" min="1"/>
   </label>
 
   <label>Pages Read:
-    <input type="number" [(ngModel)]="newBook.pagesRead" name="pagesRead" />
+    <input type="number" [(ngModel)]="newBook.pagesRead" name="pagesRead" min="0" [max]="newBook.totalPages || null"/>
   </label>
 
   <label>Notes:

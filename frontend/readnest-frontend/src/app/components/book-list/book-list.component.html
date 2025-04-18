@@ -1,4 +1,17 @@
-<h2>ReadNest</h2>
+<h2 class="readnest-logo">ReadNest</h2>
+
+<div class="sort-bar">
+  <label for="sort-select">Sort by:</label>
+  <select id="sort-select" [(ngModel)]="sortOption" (change)="sortBooks()">
+    <option value="author-asc">Author (A–Z)</option>
+    <option value="author-desc">Author (Z–A)</option>
+    <option value="title-asc">Title (A–Z)</option>
+    <option value="title-desc">Title (Z–A)</option>
+    <option value="reread-desc">Re-readability (High → Low)</option>
+    <option value="reread-asc">Re-readability (Low → High)</option>
+    <option value="unread-first">Unread Books First</option>
+  </select>
+</div>
 
 <div class="bookshelf">
   <div
@@ -9,13 +22,14 @@
   >
     <img
       *ngIf="book.coverUrl"
-      [src]="book.coverUrl"
+      [src]="getCoverImageUrl(book)"
       [alt]="book.title"
       [style.filter]="book.readingStatus === 'Unread' ? 'grayscale(100%)' : 'none'"
     />
     <div class="book-title">{{ book.title }}</div>
   </div>
 </div>
+
 <a [routerLink]="['/add']" class="floating-add-button" title="Add a new book">
-  ➕
+  <img src="assets/add.png" alt="Add">
 </a>

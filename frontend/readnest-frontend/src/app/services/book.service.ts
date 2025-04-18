@@ -16,9 +16,9 @@ export class BookService {
     return this.http.get<Book[]>(this.apiUrl);
   }
 
-  addBook(book: Book): Observable<Book> {
-    return this.http.post<Book>(this.apiUrl, book);
-  }
+  addBook(formData: FormData): Observable<Book> {
+  return this.http.post<Book>(this.apiUrl, formData);
+}
 
   updateBook(book: Book): Observable<Book> {
     return this.http.put<Book>(`${this.apiUrl}/${book.id}`, book);

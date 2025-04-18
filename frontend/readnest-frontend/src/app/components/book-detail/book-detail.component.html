@@ -24,7 +24,7 @@
     </p>
   
     <label>Pages Read:
-      <input type="number" [(ngModel)]="book.pagesRead" name="pagesRead" />
+      <input type="number" [(ngModel)]="book.pagesRead" name="pagesRead" min="0"/>
     </label>
   
     <label>Re-readability (0–10):
@@ -39,8 +39,20 @@
       <textarea [(ngModel)]="book.notes" name="notes" rows="4"></textarea>
     </label>
   
-    <img *ngIf="book.coverUrl" [src]="book.coverUrl" [alt]="book.title" class="cover" />
-
+    <div class="book-cover-container">
+      <img 
+        class="book-cover"
+        [src]="getCoverImageUrl()" 
+        [alt]="book.title" 
+        (click)="toggleImageModal()"
+      />
+    </div>
+    <div class="image-modal" *ngIf="isImageModalOpen" (click)="toggleImageModal()">
+      <img [src]="getCoverImageUrl()" [alt]="book.title" />
+    </div>
+    <label>Change Cover Image:
+      <input type="file" (change)="onCoverFileSelected($event)" accept="image/*" />
+    </label>
     <div class="button-group">
         <button (click)="saveChanges()">Save</button>
         <button type="button" (click)="deleteBook()" class="delete-button">Delete</button>

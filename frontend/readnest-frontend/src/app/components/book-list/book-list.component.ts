@@ -44,14 +44,60 @@ export class BookListComponent implements OnInit {
     }
   }   
   ngOnInit(): void {
+    const savedSort = localStorage.getItem('sortOption');
+  if (savedSort) {
+    this.sortOption = savedSort;
+  }
     this.bookService.getBooks().subscribe({
       next: (data) => {
         console.log('Books loaded:', data);
         this.books = data;
+        this.sortBooks();
       },
       error: (err) => {
         console.error('Error fetching books:', err);
       }
     });
   }
+  getCoverImageUrl(book: Book): string {
+    if (!book.coverUrl) return 'assets/noimage.png';
+    if (book.coverUrl.startsWith('http')) {
+      return book.coverUrl;
+    }
+    if (book.coverUrl.startsWith('assets/')) {
+      return book.coverUrl;
+    }
+    return `http://localhost:8080${book.coverUrl}`;
+  }
+  
+  sortOption: string = 'author-asc';
+
+  sortBooks(): void {
+    localStorage.setItem('sortOption', this.sortOption);
+  
+    this.books.sort((a, b) => {
+      const getString = (str?: string) => str?.toLowerCase() || '';
+      const getNumber = (num?: number) => num ?? 0;
+  
+      switch (this.sortOption) {
+        case 'author-asc':
+          return getString(a.author).localeCompare(getString(b.author));
+        case 'author-desc':
+          return getString(b.author).localeCompare(getString(a.author));
+        case 'title-asc':
+          return getString(a.title).localeCompare(getString(b.title));
+        case 'title-desc':
+          return getString(b.title).localeCompare(getString(a.title));
+        case 'reread-desc':
+          return getNumber(b.reReadability) - getNumber(a.reReadability);
+        case 'reread-asc':
+          return getNumber(a.reReadability) - getNumber(b.reReadability);
+        case 'unread-first':
+          return (a.readingStatus === 'Unread' ? -1 : 1) - (b.readingStatus === 'Unread' ? -1 : 1);
+        default:
+          return 0;
+      }
+    });
+  }
+  
 }

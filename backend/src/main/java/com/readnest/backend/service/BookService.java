@@ -4,7 +4,7 @@ import com.readnest.backend.model.Book;
 import com.readnest.backend.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.io.File;
 import java.util.List;
 
 @Service
@@ -18,6 +18,9 @@ public class BookService {
     }
 
     public Book createBook(Book book) {
+        if (bookRepository.existsByTitleAndAuthor(book.getTitle(), book.getAuthor())) {
+            throw new IllegalArgumentException("This book already exists.");
+        }
         return bookRepository.save(book);
     }
 
@@ -36,8 +39,37 @@ public class BookService {
     return bookRepository.save(book);
 }
 
+public Book updateCover(Long id, String newCoverUrl) {
+    Book book = bookRepository.findById(id).orElseThrow();
 
-    public void deleteBook(Long id) {
-        bookRepository.deleteById(id);
+    String oldCover = book.getCoverUrl();
+    if (oldCover != null && oldCover.startsWith("/uploads/")) {
+        File oldFile = new File("uploads", oldCover.substring("/uploads/".length()));
+        if (oldFile.exists()) {
+            oldFile.delete();
+        }
     }
+
+    book.setCoverUrl(newCoverUrl);
+    return bookRepository.save(book);
+}
+
+
+
+public void deleteBook(Long id) {
+    Book book = bookRepository.findById(id).orElseThrow();
+
+    String coverUrl = book.getCoverUrl();
+    if (coverUrl != null && coverUrl.startsWith("/uploads/")) {
+        File imageFile = new File("uploads", coverUrl.substring("/uploads/".length()));
+        if (imageFile.exists()) {
+            imageFile.delete();
+        }
+    }
+
+    bookRepository.deleteById(id);
+}
+public Book getBookById(Long id) {
+    return bookRepository.findById(id).orElseThrow();
+}
 }
