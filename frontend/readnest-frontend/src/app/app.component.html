@@ -1,4 +1,10 @@
-<router-outlet></router-outlet>
-<button class="dark-toggle-btn" (click)="toggleDarkMode()">
-    Toggle Dark Mode
-</button>
+<nav class="navbar">
+    <a routerLink="/" *ngIf="isLoggedIn()">My Books</a>
+    <a routerLink="/add" *ngIf="isLoggedIn()">Add Book</a>
+    <a routerLink="/login" *ngIf="!isLoggedIn()">Login</a>
+    <a routerLink="/register" *ngIf="!isLoggedIn()">Register</a>
+    <button (click)="logout()" *ngIf="isLoggedIn()">Logout</button>
+  </nav>
+  
+  <router-outlet></router-outlet>
+  

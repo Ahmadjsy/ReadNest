@@ -9,43 +9,54 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
+import com.readnest.backend.model.User; 
 
 @RestController
 @RequestMapping("/api/books")
-@CrossOrigin(origins = "*")
+
 public class BookController {
 
     @Autowired
     private BookService bookService;
 
     @GetMapping
-    public List<Book> getAllBooks() {
-        return bookService.getAllBooks();
+    public List<Book> getUserBooks() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+        return bookService.getBooksByUser(user);
     }
 
     @PostMapping(consumes = {"multipart/form-data"})
-    public Book createBook(
-            @RequestPart("book") Book book,
-            @RequestPart(value = "cover", required = false) MultipartFile coverFile
-    ) {
-        if (coverFile != null && !coverFile.isEmpty()) {
-            try {
-                String uploadPath = new File("uploads").getAbsolutePath(); // resolves to project-root/uploads
-                File uploadDir = new File(uploadPath);
-                if (!uploadDir.exists()) {
-                    uploadDir.mkdirs();
+        public Book createBook(
+                @RequestPart("book") Book book,
+                @RequestPart(value = "cover", required = false) MultipartFile coverFile
+        ) {
+            System.out.println(">>> Auth = " + SecurityContextHolder.getContext().getAuthentication());
+
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            User user = (User) auth.getPrincipal();
+            book.setUser(user); 
+
+            if (coverFile != null && !coverFile.isEmpty()) {
+                try {
+                    String uploadPath = new File("uploads").getAbsolutePath();
+                    File uploadDir = new File(uploadPath);
+                    if (!uploadDir.exists()) {
+                        uploadDir.mkdirs();
+                    }
+                    String fileName = System.currentTimeMillis() + "_" + coverFile.getOriginalFilename();
+                    File dest = new File(uploadDir, fileName);
+                    coverFile.transferTo(dest);
+                    book.setCoverUrl("/uploads/" + fileName);
+                } catch (IOException e) {
+                    throw new RuntimeException("Failed to save cover image", e);
                 }
-                String fileName = System.currentTimeMillis() + "_" + coverFile.getOriginalFilename();
-                File dest = new File(uploadDir, fileName);
-                coverFile.transferTo(dest);
-                book.setCoverUrl("/uploads/" + fileName);
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to save cover image", e);
             }
+
+            return bookService.createBook(book);
         }
-    
-        return bookService.createBook(book);
-    }
     @CrossOrigin(origins = "http://localhost:4200")
     @PutMapping(path = "/{id}/cover", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Book updateBookCover(

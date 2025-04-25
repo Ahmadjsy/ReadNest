@@ -25,6 +25,9 @@ public class Book {
     private String coverUrl;
     private String readingStatus;
     private Integer reReadability;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
     // Constructors
     public Book() {}
 
@@ -117,4 +120,10 @@ public class Book {
     public void setReReadability(Integer reReadability) {
         this.reReadability = reReadability;
     }    
+    public User getUser() {
+        return user;
+    }
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

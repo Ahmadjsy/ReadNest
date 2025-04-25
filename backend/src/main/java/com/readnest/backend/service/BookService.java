@@ -2,8 +2,12 @@ package com.readnest.backend.service;
 
 import com.readnest.backend.model.Book;
 import com.readnest.backend.repository.BookRepository;
+import com.readnest.backend.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import java.io.File;
 import java.util.List;
 
@@ -18,12 +22,14 @@ public class BookService {
     }
 
     public Book createBook(Book book) {
-        if (bookRepository.existsByTitleAndAuthor(book.getTitle(), book.getAuthor())) {
-            throw new IllegalArgumentException("This book already exists.");
+        if (bookRepository.existsByTitleAndAuthorAndUser(book.getTitle(), book.getAuthor(), book.getUser())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "This book already exists.");
         }
         return bookRepository.save(book);
     }
-
+    public List<Book> getBooksByUser(User user) {
+        return bookRepository.findByUser(user); 
+    }
     public Book updateBook(Long id, Book bookDetails) {
     Book book = bookRepository.findById(id).orElseThrow();
     book.setTitle(bookDetails.getTitle());

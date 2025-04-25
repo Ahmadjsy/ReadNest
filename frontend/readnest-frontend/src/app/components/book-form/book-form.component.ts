@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { BookService } from '../../services/book.service';
 import { Book } from '../../book';
 import { Router } from '@angular/router';
+import { AuthService } from '../../auth/auth.service';
 @Component({
   selector: 'app-book-form',
   standalone: true,
@@ -34,7 +35,8 @@ export class BookFormComponent implements OnChanges {
 
   constructor(
     private bookService: BookService,
-    private router: Router) {}
+    private router: Router,
+    private authService: AuthService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['editingBook'] && this.editingBook) {
@@ -94,10 +96,28 @@ export class BookFormComponent implements OnChanges {
           alert('Book added successfully!');
           this.router.navigate(['/']);
         },
-        error: (err) => {
-          console.error('Error adding book:', err);
-          alert('Error adding book');
-        }
+       error: (err) => {
+  console.log('Caught error:', err);
+
+  if (err.status === 409) {
+    // Duplicate book error
+    alert('This book already exists in your library.');
+  } 
+  else if (err.status === 403) {
+    // Forbidden
+    alert('Access denied. Logging you out.');
+    this.authService.logout();
+  } 
+  else if (err.status === 401) {
+    // Unauthorized (expired session)
+    alert('Session expired. Please log in again.');
+    this.authService.logout();
+  } 
+  else {
+    alert(`Unexpected error (${err.status}): ${err.error?.error || err.message}`);
+  }
+}
+
       });
     }
   }
