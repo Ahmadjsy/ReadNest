@@ -1,72 +1,86 @@
-<form (ngSubmit)="submitBook()" class="book-form">
-  <h3>Lookup Book by ISBN or Title</h3>
+<div class="min-h-screen bg-[#f4e2d8] px-4 py-6 relative">
+<form (ngSubmit)="submitBook()" class="max-w-xl mx-auto bg-[#d6b79c] p-6 rounded-lg shadow space-y-5">
+  <h3 class="text-xl font-semibold text-[#4e342e]">Lookup Book by ISBN or Title</h3>
 
-  <label>
+  <label class="block">
     <input
       [(ngModel)]="searchQuery"
       name="searchQuery"
       placeholder="Enter ISBN or title"
       (keydown.enter)="onSearchEnter($event)"
+      class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
     />
   </label>
 
-  <button type="button" (click)="fetchBookInfo()">Fetch Book</button>
-  <div *ngIf="showSearchResults" class="search-results">
-    <p>Select a book:</p>
-    <div class="result-item" *ngFor="let result of searchResults" (click)="selectSearchResult(result)">
-      <img [src]="getBestImageLink(result.volumeInfo)" alt="Book Cover" />
-      <div class="info">
-        <div class="title">{{ result.volumeInfo.title }}</div>
-        <div class="author">by {{ result.volumeInfo.authors?.[0] || 'Unknown Author' }}</div>
+  <button type="button" (click)="fetchBookInfo()" class="bg-[#6d4c41] text-white px-4 py-2 rounded hover:bg-[#5d4037] transition">
+    Fetch Book
+  </button>
+
+  <div *ngIf="showSearchResults" class="bg-white rounded shadow p-4">
+    <p class="text-sm text-[#4e342e] font-medium mb-2">Select a book:</p>
+    <div class="grid gap-2">
+      <div
+        class="flex items-center gap-4 p-2 hover:bg-[#f4e2d8] rounded cursor-pointer"
+        *ngFor="let result of searchResults"
+        (click)="selectSearchResult(result)"
+      >
+        <img [src]="getBestImageLink(result.volumeInfo)" alt="Book Cover" class="w-12 h-auto object-contain rounded" />
+        <div class="text-sm">
+          <div class="font-semibold">{{ result.volumeInfo.title }}</div>
+          <div class="text-gray-600">by {{ result.volumeInfo.authors?.[0] || 'Unknown Author' }}</div>
+        </div>
       </div>
     </div>
   </div>
-
-  <label>Title:
-    <input [(ngModel)]="newBook.title" name="title" />
+  <label class="block text-sm font-medium text-[#4e342e]">Title:
+    <input [(ngModel)]="newBook.title" name="title" class="mt-1 block w-full px-3 py-2 border rounded-md" />
   </label>
 
-  <label>Author:
-    <input [(ngModel)]="newBook.author" name="author" />
+  <label class="block text-sm font-medium text-[#4e342e]">Author:
+    <input [(ngModel)]="newBook.author" name="author" class="mt-1 block w-full px-3 py-2 border rounded-md" />
   </label>
 
-  <label>Category:
-    <input [(ngModel)]="newBook.category" name="category" />
+  <label class="block text-sm font-medium text-[#4e342e]">Category:
+    <input [(ngModel)]="newBook.category" name="category" class="mt-1 block w-full px-3 py-2 border rounded-md" />
   </label>
 
-  <label>Description:
-    <textarea [(ngModel)]="newBook.description" name="description" rows="3"></textarea>
+  <label class="block text-sm font-medium text-[#4e342e]">Description:
+    <textarea [(ngModel)]="newBook.description" name="description" rows="3" class="mt-1 block w-full px-3 py-2 border rounded-md"></textarea>
   </label>
 
-  <label>Total Pages:
-    <input type="number" [(ngModel)]="newBook.totalPages" name="totalPages" min="1"/>
+  <label class="block text-sm font-medium text-[#4e342e]">Total Pages:
+    <input type="number" [(ngModel)]="newBook.totalPages" name="totalPages" min="1" class="mt-1 block w-full px-3 py-2 border rounded-md" />
   </label>
 
-  <label>Pages Read:
-    <input type="number" [(ngModel)]="newBook.pagesRead" name="pagesRead" min="0" [max]="newBook.totalPages || null"/>
+  <label class="block text-sm font-medium text-[#4e342e]">Pages Read:
+    <input
+      type="number"
+      [(ngModel)]="newBook.pagesRead"
+      name="pagesRead"
+      min="0"
+      [max]="newBook.totalPages || null"
+      (change)="updateReadingStatus()"
+      class="mt-1 block w-full px-3 py-2 border rounded-md"
+    />
   </label>
 
-  <label>Notes:
-    <textarea [(ngModel)]="newBook.notes" name="notes" rows="4"></textarea>
+  <label class="block text-sm font-medium text-[#4e342e]">Notes:
+    <textarea [(ngModel)]="newBook.notes" name="notes" rows="4" class="mt-1 block w-full px-3 py-2 border rounded-md"></textarea>
   </label>
 
-  <label>Reading Status:
-    <select [(ngModel)]="newBook.readingStatus" name="readingStatus">
-      <option value="Unread">Unread</option>
-      <option value="Reading">Reading</option>
-      <option value="Read">Read</option>
-    </select>
+  <label class="block text-sm font-medium text-[#4e342e]">Upload Cover Image:
+    <input type="file" (change)="onImageSelected($event)" accept="image/*" class="mt-2" />
   </label>
 
-  <label>Upload Cover Image:
-    <input type="file" (change)="onImageSelected($event)" accept="image/*" />
-  </label>
+  <img *ngIf="previewUrl" [src]="previewUrl" alt="preview" class="rounded shadow max-h-64" />
 
-  <img *ngIf="previewUrl" [src]="previewUrl" alt="preview" class="preview-img" />
-
-  <div class="button-group">
-    <button type="submit">Add Book</button>
-    <div class="spacer"></div>
-    <button type="button" class="reset" (click)="resetForm()">Reset</button>
+  <div class="flex justify-between mt-6">
+    <button type="submit" class="bg-[#6d4c41] text-white px-4 py-2 rounded hover:bg-[#5d4037] transition">
+      Add Book
+    </button>
+    <button type="button" class="bg-gray-300 text-[#4e342e] px-4 py-2 rounded hover:bg-gray-400 transition" (click)="resetForm()">
+      Reset
+    </button>
   </div>
 </form>
+</div>

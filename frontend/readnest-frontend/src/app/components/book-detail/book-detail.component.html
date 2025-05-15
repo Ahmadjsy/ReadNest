@@ -1,62 +1,89 @@
-<form *ngIf="book" class="book-detail-form">
-    <h2>
-        {{ book.title }}
-    </h2>
+<div class="min-h-screen bg-[#f4e2d8] px-4 py-6 relative">
+<form *ngIf="book" class="max-w-xl mx-auto bg-[#d6b79c] p-6 rounded-lg shadow space-y-4">
+  <h2 class="text-2xl font-bold text-[#4e342e]">{{ book.title }}</h2>
 
-    <p>
-        <strong>Author:</strong> {{ book.author }}
-    </p>
-  
-    <label>Category:
-      <input [(ngModel)]="book.category" name="category" />
-    </label>
-  
-    <label>Status:
-      <select [(ngModel)]="book.readingStatus" name="readingStatus">
-        <option value="Unread">Unread</option>
-        <option value="Reading">Reading</option>
-        <option value="Read">Read</option>
-      </select>
-    </label>
-  
-    <p>
-        <strong>Total Pages:</strong> {{ book.totalPages }}
-    </p>
-  
-    <label>Pages Read:
-      <input type="number" [(ngModel)]="book.pagesRead" name="pagesRead" min="0"/>
-    </label>
-  
-    <label>Re-readability (0–10):
-        <input type="number" [(ngModel)]="book.reReadability" name="reReadability" min="0" max="10" />
-    </label>
-  
-    <label>Description:
-        <p class="book-description">{{ book.description }}</p>
-    </label>
-  
-    <label>Notes:
-      <textarea [(ngModel)]="book.notes" name="notes" rows="4"></textarea>
-    </label>
-  
-    <div class="book-cover-container">
-      <img 
-        class="book-cover"
-        [src]="getCoverImageUrl()" 
-        [alt]="book.title" 
-        (click)="toggleImageModal()"
-      />
-    </div>
-    <div class="image-modal" *ngIf="isImageModalOpen" (click)="toggleImageModal()">
-      <img [src]="getCoverImageUrl()" [alt]="book.title" />
-    </div>
-    <label>Change Cover Image:
-      <input type="file" (change)="onCoverFileSelected($event)" accept="image/*" />
-    </label>
-    <div class="button-group">
-        <button (click)="saveChanges()">Save</button>
-        <button type="button" (click)="deleteBook()" class="delete-button">Delete</button>
-    </div>
+  <p><strong>Author:</strong> {{ book.author }}</p>
 
-  </form>
-  
+  <label class="block text-sm font-medium text-[#4e342e]">Category:
+    <input
+      [(ngModel)]="book.category"
+      name="category"
+      class="mt-1 block w-full rounded border border-gray-300 px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#a1887f]"
+    />
+  </label>
+
+  <p class="text-sm text-[#6d4c41]">
+    <strong>Status:</strong> {{ getReadingStatus() }}
+  </p>
+
+  <p><strong>Total Pages:</strong> {{ book.totalPages }}</p>
+
+  <label class="block text-sm font-medium text-[#4e342e]">Pages Read:
+    <input
+      type="number"
+      [(ngModel)]="book.pagesRead"
+      name="pagesRead"
+      min="0"
+      class="mt-1 block w-full rounded border border-gray-300 px-3 py-2 shadow-sm"
+    />
+  </label>
+
+  <label class="block text-sm font-medium text-[#4e342e]">Re-readability (0–10):
+    <input
+      type="number"
+      [(ngModel)]="book.reReadability"
+      name="reReadability"
+      min="0"
+      max="10"
+      class="mt-1 block w-full rounded border border-gray-300 px-3 py-2 shadow-sm"
+    />
+  </label>
+
+  <div>
+    <label class="block text-sm font-medium text-[#4e342e]">Description:</label>
+    <p class="text-gray-700">{{ book.description }}</p>
+  </div>
+
+  <label class="block text-sm font-medium text-[#4e342e]">Notes:
+    <textarea
+      [(ngModel)]="book.notes"
+      name="notes"
+      rows="4"
+      class="mt-1 block w-full rounded border border-gray-300 px-3 py-2 shadow-sm"
+    ></textarea>
+  </label>
+
+  <div class="flex justify-center">
+    <img
+      class="rounded shadow cursor-pointer max-h-64"
+      [src]="getCoverImageUrl()"
+      [alt]="book.title"
+      (click)="toggleImageModal()"
+    />
+  </div>
+
+  <div *ngIf="isImageModalOpen" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50" (click)="toggleImageModal()">
+    <img [src]="getCoverImageUrl()" [alt]="book.title" class="max-h-[80vh] max-w-[90vw] rounded shadow-lg" />
+  </div>
+
+  <label class="block text-sm font-medium text-[#4e342e]">Change Cover Image:
+    <input type="file" (change)="onCoverFileSelected($event)" accept="image/*" class="mt-2" />
+  </label>
+
+  <div class="flex justify-between mt-4">
+    <button
+      (click)="saveChanges()"
+      class="bg-[#6d4c41] text-white px-4 py-2 rounded hover:bg-[#5d4037] transition"
+    >
+      Save
+    </button>
+    <button
+      type="button"
+      (click)="deleteBook()"
+      class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
+    >
+      Delete
+    </button>
+  </div>
+</form>
+</div>

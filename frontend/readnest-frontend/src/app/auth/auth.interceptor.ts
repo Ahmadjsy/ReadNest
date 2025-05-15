@@ -14,7 +14,14 @@ export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
   return next(cloned).pipe(
     tap({
       error: (err) => {
-        if (err.status === 403 || err.status === 401) {
+        const shouldLogout =
+        (err.status === 401 || err.status === 403) &&
+        !req.url.includes('/auth/') &&
+        !req.url.includes('/api/books') &&
+        err.error?.message !== 'Book already exists';
+
+
+        if (shouldLogout) {
           console.warn('Token expired or unauthorized — logging out.');
           localStorage.removeItem('token');
           router.navigate(['/login']);
@@ -23,3 +30,4 @@ export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
     })
   );
 };
+

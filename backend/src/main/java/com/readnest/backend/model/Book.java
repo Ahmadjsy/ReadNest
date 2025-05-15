@@ -9,6 +9,7 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String isbn;
     @Column(length = 512)
     private String title;
     @Column(length = 512)
@@ -28,7 +29,7 @@ public class Book {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    // Constructors
+
     public Book() {}
 
     public Book(String title, String author, String category, int totalPages) {
@@ -37,13 +38,18 @@ public class Book {
         this.category = category;
         this.totalPages = totalPages;
     }
-
     public Long getId() {
         return id;
     }
-
+    
     public void setId(Long id) {
         this.id = id;
+    }
+    public String getIsbn() {
+        return isbn;
+    }
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 
     public String getTitle() {

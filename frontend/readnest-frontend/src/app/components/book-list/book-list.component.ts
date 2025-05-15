@@ -69,35 +69,61 @@ export class BookListComponent implements OnInit {
     }
     return `http://localhost:8080${book.coverUrl}`;
   }
-  
+  getProgressHeight(book: Book): number {
+    const total = book.totalPages ?? 0;
+    const read = book.pagesRead ?? 0;
+    return total > 0 ? Math.min((read / total) * 100, 100) : 0;
+  }
   sortOption: string = 'author-asc';
 
   sortBooks(): void {
     localStorage.setItem('sortOption', this.sortOption);
-  
+
+    const getString = (str?: string) => str?.toLowerCase() || '';
+    const getNumber = (num?: number) => num ?? 0;
+      console.log('Sorting: unread-first');
+      this.books.forEach(book =>
+        console.log(`${book.title} → "${book.readingStatus}"`)
+      );
     this.books.sort((a, b) => {
-      const getString = (str?: string) => str?.toLowerCase() || '';
-      const getNumber = (num?: number) => num ?? 0;
-  
       switch (this.sortOption) {
         case 'author-asc':
-          return getString(a.author).localeCompare(getString(b.author));
+          return getString(a.author).localeCompare(getString(b.author), undefined, {
+            sensitivity: 'base',
+          });
         case 'author-desc':
-          return getString(b.author).localeCompare(getString(a.author));
+          return getString(b.author).localeCompare(getString(a.author), undefined, {
+            sensitivity: 'base',
+          });
         case 'title-asc':
-          return getString(a.title).localeCompare(getString(b.title));
+          return getString(a.title).localeCompare(getString(b.title), undefined, {
+            numeric: true,
+            sensitivity: 'base',
+          });
         case 'title-desc':
-          return getString(b.title).localeCompare(getString(a.title));
+          return getString(b.title).localeCompare(getString(a.title), undefined, {
+            numeric: true,
+            sensitivity: 'base',
+          });
         case 'reread-desc':
           return getNumber(b.reReadability) - getNumber(a.reReadability);
         case 'reread-asc':
           return getNumber(a.reReadability) - getNumber(b.reReadability);
         case 'unread-first':
-          return (a.readingStatus === 'Unread' ? -1 : 1) - (b.readingStatus === 'Unread' ? -1 : 1);
+          const statusA = getString(a.readingStatus);
+          const statusB = getString(b.readingStatus);
+
+          if (statusA === 'unread' && statusB !== 'unread') return -1;
+          if (statusA !== 'unread' && statusB === 'unread') return 1;
+
+          return getString(a.title).localeCompare(getString(b.title), undefined, {
+            numeric: true,
+            sensitivity: 'base',
+          });
         default:
           return 0;
       }
     });
-  }
+  } 
   
 }

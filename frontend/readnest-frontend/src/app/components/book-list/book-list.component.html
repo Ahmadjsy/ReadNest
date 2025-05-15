@@ -1,35 +1,63 @@
-<h2 class="readnest-logo">ReadNest</h2>
+<div class="min-h-screen bg-[#f4e2d8] px-4 py-6 relative">
 
-<div class="sort-bar">
-  <label for="sort-select">Sort by:</label>
-  <select id="sort-select" [(ngModel)]="sortOption" (change)="sortBooks()">
-    <option value="author-asc">Author (A–Z)</option>
-    <option value="author-desc">Author (Z–A)</option>
-    <option value="title-asc">Title (A–Z)</option>
-    <option value="title-desc">Title (Z–A)</option>
-    <option value="reread-desc">Re-readability (High → Low)</option>
-    <option value="reread-asc">Re-readability (Low → High)</option>
-    <option value="unread-first">Unread Books First</option>
-  </select>
-</div>
-
-<div class="bookshelf">
-  <div
-    class="book"
-    *ngFor="let book of books"
-    [routerLink]="['/book', book.id]"
-    title="{{ book.title }}"
-  >
-    <img
-      *ngIf="book.coverUrl"
-      [src]="getCoverImageUrl(book)"
-      [alt]="book.title"
-      [style.filter]="book.readingStatus === 'Unread' ? 'grayscale(100%)' : 'none'"
-    />
-    <div class="book-title">{{ book.title }}</div>
+  <div class="max-w-screen-xl mx-auto mb-4">
+    <label for="sort-select" class="text-sm font-medium text-[#4e342e] mr-2">Sort by:</label>
+    <select
+      id="sort-select"
+      [(ngModel)]="sortOption"
+      (change)="sortBooks()"
+      class="px-3 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#a1887f]"
+    >
+      <option value="author-asc">Author (A–Z)</option>
+      <option value="author-desc">Author (Z–A)</option>
+      <option value="title-asc">Title (A–Z)</option>
+      <option value="title-desc">Title (Z–A)</option>
+      <option value="reread-desc">Re-readability (High → Low)</option>
+      <option value="reread-asc">Re-readability (Low → High)</option>
+      <option value="unread-first">Unread Books First</option>
+    </select>
   </div>
-</div>
 
-<a [routerLink]="['/add']" class="floating-add-button" title="Add a new book">
-  <img src="assets/add.png" alt="Add">
+  <div class="bg-[#d6b79c] rounded-md shadow-inner p-4 max-w-screen-xl mx-auto">
+    <div class="grid grid-cols-[repeat(auto-fit,minmax(143px,1fr))] gap-x-4 gap-y-6 justify-items-center">
+      <div
+        *ngFor="let book of books"
+        [routerLink]="['/book', book.id]"
+        class="bg-[#f4e2d8] rounded-md p-3 shadow hover:shadow-lg transition hover:scale-[1.03] cursor-pointer w-[150px]"
+        title="{{ book.title }}"
+      >
+       <div class="relative w-full aspect-[2/3] mb-2 rounded overflow-hidden">
+        <img
+          *ngIf="book.coverUrl"
+          [src]="getCoverImageUrl(book)"
+          [alt]="book.title"
+          class="absolute inset-0 w-full h-full object-contain grayscale z-10"
+        />
+
+        <div
+          class="absolute inset-0 overflow-hidden z-20 flex items-end"
+          [ngStyle]="{ height: '100%' }"
+        >
+          <img
+            [src]="getCoverImageUrl(book)"
+            [alt]="book.title"
+            class="w-full object-contain"
+            [ngStyle]="{ clipPath: 'inset(' + (100 - getProgressHeight(book)) + '% 0 0 0)' }"
+          />
+        </div>
+      </div>
+        <div class="text-sm font-medium text-center text-[#4e342e] break-words leading-snug">
+          {{ book.title }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+ <a
+  [routerLink]="['/add']"
+  class="fixed bottom-10 right-10 bg-[#6d4c41] rounded-full w-14 h-14 shadow-lg flex items-center justify-center hover:scale-110 transition"
+  title="Add a new book"
+>
+  <img src="assets/add.png" alt="Add" class="w-12 h-12 object-contain pb-[10px] pl-[2px]" />
 </a>
+</div>

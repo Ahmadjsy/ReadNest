@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationStart } from '@angular/router';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { AuthService } from './auth/auth.service';
 import { Book } from './book';
 import { CommonModule } from '@angular/common';
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -16,17 +17,26 @@ export class AppComponent {
   selectedBook: Book | null = null;
 
   constructor(public authService: AuthService, private router: Router) {
+  this.router.events.subscribe(event => {
+  if (event instanceof NavigationStart) {
     const isLoggedIn = this.authService.isLoggedIn();
-    const currentRoute = this.router.url;
+    const url = event.url;
 
-    if (!isLoggedIn && currentRoute !== '/login') {
-      this.router.navigate(['/login']);
+    if (isLoggedIn && (url === '/login' || url === '/register')) {
+      if (this.router.url !== '/books') {
+        this.router.navigate(['/books']);
+      }
     }
 
-    if (isLoggedIn && (currentRoute === '/login' || currentRoute === '/register')) {
-      this.router.navigate(['/books']);
+    if (!isLoggedIn && url !== '/login' && url !== '/register') {
+      if (this.router.url !== '/login') {
+        this.router.navigate(['/login']);
+      }
     }
   }
+});
+}
+
 
   handleEdit(book: Book): void {
     this.selectedBook = book;

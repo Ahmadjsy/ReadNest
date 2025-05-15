@@ -21,8 +21,8 @@ export class BookFormComponent implements OnChanges {
   searchResults: any[] = [];
   showSearchResults: boolean = false;
 
-
   newBook: Book = {
+    isbn: '',
     title: '',
     author: '',
     category: '',
@@ -41,6 +41,21 @@ export class BookFormComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['editingBook'] && this.editingBook) {
       this.newBook = { ...this.editingBook };
+    }
+  }
+
+  updateReadingStatus(): void {
+    if (!this.newBook) return;
+
+    const read = this.newBook.pagesRead ?? 0;
+    const total = this.newBook.totalPages ?? 0;
+
+    if (read >= total && total > 0) {
+      this.newBook.readingStatus = 'Read';
+    } else if (read > 0) {
+      this.newBook.readingStatus = 'Reading';
+    } else {
+      this.newBook.readingStatus = 'Unread';
     }
   }
 
@@ -66,7 +81,6 @@ export class BookFormComponent implements OnChanges {
       if (!proceed) return;
     }
     if (this.newBook.id) {
-      // Edit existing book
       this.bookService.updateBook(this.newBook).subscribe({
         next: (book) => {
           console.log('Book updated:', book);
@@ -79,46 +93,29 @@ export class BookFormComponent implements OnChanges {
         }
       });
     } else {
-      // Add new book with file support
+      this.updateReadingStatus();
       const formData = new FormData();
-  
-      // Attach book data as JSON
       formData.append('book', new Blob([JSON.stringify(this.newBook)], { type: 'application/json' }));
   
-      // Attach image file if present
       if (this.selectedImageFile) {
         formData.append('cover', this.selectedImageFile);
       }
-  
       this.bookService.addBook(formData).subscribe({
-        next: (book) => {
-          console.log('Book added:', book);
-          alert('Book added successfully!');
-          this.router.navigate(['/']);
-        },
-       error: (err) => {
-  console.log('Caught error:', err);
-
-  if (err.status === 409) {
-    // Duplicate book error
-    alert('This book already exists in your library.');
-  } 
-  else if (err.status === 403) {
-    // Forbidden
-    alert('Access denied. Logging you out.');
-    this.authService.logout();
-  } 
-  else if (err.status === 401) {
-    // Unauthorized (expired session)
-    alert('Session expired. Please log in again.');
-    this.authService.logout();
-  } 
-  else {
-    alert(`Unexpected error (${err.status}): ${err.error?.error || err.message}`);
-  }
-}
-
-      });
+         next: (book) => {
+      this.router.navigate(['/']);
+    },
+    error: (err) => {
+      if (err.status === 409) {
+        alert('This book already exists.');
+      } else if (err.status === 401) {
+        alert('Your session has expired. Please log in again.');
+        this.authService.logout();
+      } else {
+        alert('An unexpected error occurred.');
+        console.error(err);
+      }
+    }
+  });
     }
   }
   getBestImageLink(book: any): string {
@@ -138,7 +135,7 @@ export class BookFormComponent implements OnChanges {
   }
   selectSearchResult(result: any): void {
     const book = result.volumeInfo;
-  
+    this.newBook.isbn = result.volumeInfo.industryIdentifiers?.[0]?.identifier || '';
     this.newBook.title = book.title || '';
     this.newBook.author = book.authors?.[0] || 'Unknown Author';
     this.newBook.totalPages = book.pageCount || 0;
@@ -146,34 +143,10 @@ export class BookFormComponent implements OnChanges {
     this.newBook.description = book.description || '';
   
     const links = book.imageLinks || {};
-    const originalUrl = links.extraLarge || links.large || links.medium || links.thumbnail || links.smallThumbnail || '';
-  
-    if (!originalUrl) {
-      this.newBook.coverUrl = 'assets/noimage.png';
-      this.finalizeSelection();
-      return;
-    }
-  
-    // Try replacing zoom only if it exists
-    let zoom3Url = '';
-    if (originalUrl.includes('zoom=')) {
-      zoom3Url = originalUrl.replace(/zoom=\d/, 'zoom=3');
-    } else {
-      zoom3Url = originalUrl; // Don't touch it
-    }
-  
-    const testImg = new Image();
-    testImg.onload = () => {
-      const isPlaceholder = testImg.naturalWidth <= 128 && testImg.naturalHeight <= 192;
-      this.newBook.coverUrl = isPlaceholder ? originalUrl : zoom3Url;
-      this.finalizeSelection();
-    };
-    testImg.onerror = () => {
-      this.newBook.coverUrl = originalUrl;
-      this.finalizeSelection();
-    };
-  
-    testImg.src = zoom3Url;
+    const selectedUrl = links.extraLarge || links.large || links.medium || links.thumbnail || links.smallThumbnail || '';
+
+    this.newBook.coverUrl = selectedUrl || 'assets/noimage.png';
+    this.finalizeSelection();
   }
   
   finalizeSelection(): void {
@@ -181,9 +154,6 @@ export class BookFormComponent implements OnChanges {
     this.searchResults = [];
     this.showSearchResults = false;
   }
-  
-  
-  
   
   fetchBookInfo(): void {
     const query = this.searchQuery.trim();
@@ -234,6 +204,7 @@ export class BookFormComponent implements OnChanges {
   }
   resetForm(): void {
     this.newBook = {
+      isbn: '',
       title: '',
       author: '',
       category: '',

@@ -1,10 +1,17 @@
-<nav class="navbar">
-    <a routerLink="/" *ngIf="isLoggedIn()">My Books</a>
-    <a routerLink="/add" *ngIf="isLoggedIn()">Add Book</a>
-    <a routerLink="/login" *ngIf="!isLoggedIn()">Login</a>
-    <a routerLink="/register" *ngIf="!isLoggedIn()">Register</a>
-    <button (click)="logout()" *ngIf="isLoggedIn()">Logout</button>
-  </nav>
-  
-  <router-outlet></router-outlet>
-  
+
+<ng-container *ngIf="isLoggedIn()">
+  <div class="absolute top-4 right-6">
+    <button
+      (click)="logout()"
+      class="bg-[#6d4c41] text-white font-medium px-4 py-2 rounded hover:bg-[#5d4037] transition"
+    >
+      Logout
+    </button>
+  </div>
+</ng-container>
+
+<header class="w-full text-center py-4">
+  <h1 class="text-3xl font-bold text-[#4e342e]">ReadNest</h1>
+</header>
+<router-outlet></router-outlet>
+

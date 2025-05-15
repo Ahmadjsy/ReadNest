@@ -17,7 +17,10 @@ export class BookService {
   }
 
   addBook(formData: FormData): Observable<Book> {
-  return this.http.post<Book>(this.apiUrl, formData);
+  const token = localStorage.getItem('token'); 
+  return this.http.post<Book>(this.apiUrl, formData, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {}
+  });
 }
 
   updateBook(book: Book): Observable<Book> {

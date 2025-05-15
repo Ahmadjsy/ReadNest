@@ -93,6 +93,12 @@ export class BookDetailComponent implements OnInit {
     }
   }
   
+  getReadingStatus(): string {
+  if (!this.book) return 'Unread';
+  if (this.book.pagesRead >= this.book.totalPages) return 'Read';
+  if (this.book.pagesRead > 0) return 'Reading';
+  return 'Unread';
+}
 
   updateBookInfo(): void {
     if (!this.book || !this.book.id) return;

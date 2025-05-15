@@ -1,15 +1,47 @@
-<div class="login-container">
-    <h2>Login</h2>
-  
-    <form (submit)="login(); $event.preventDefault()">
-      <input type="email" [(ngModel)]="email" placeholder="Email" name="email" required>
-      <input type="password" [(ngModel)]="password" placeholder="Password" name="password" required>
-      <button type="submit">Log In</button>
-      <p class="error" *ngIf="error">{{ error }}</p>
-      <p class="switch-form">
-        Don't have an account?
-        <a routerLink="/register">Register here</a>
+<div class="min-h-screen flex items-center justify-center bg-[#f4e2d8]">
+  <div class="w-full max-w-sm bg-white p-6 rounded-xl shadow-lg">
+    <h2 class="text-2xl font-semibold text-center text-[#4e342e] mb-6">Login</h2>
+
+    <form (submit)="login(); $event.preventDefault()" novalidate>
+      <div class="mb-4">
+        <input
+          type="email"
+          name="email"
+          [(ngModel)]="email"
+          placeholder="Email"
+          required
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#a1887f]"
+        />
+      </div>
+
+      <div class="mb-4">
+        <input
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          placeholder="Password"
+          required
+          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#a1887f]"
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="w-full bg-[#6d4c41] hover:bg-[#5d4037] text-white font-semibold py-2 px-4 rounded transition duration-200"
+      >
+        Log In
+      </button>
+
+      <p *ngIf="error" class="text-sm text-red-600 text-center mt-2">
+        {{ error }}
+      </p>
+
+      <p class="text-center text-sm text-gray-700 mt-4">
+        Don’t have an account?
+        <a routerLink="/register" class="text-[#6d4c41] hover:underline font-medium">
+          Register here
+        </a>
       </p>
     </form>
   </div>
-  
+</div>

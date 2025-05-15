@@ -25,6 +25,15 @@ public class BookService {
         if (bookRepository.existsByTitleAndAuthorAndUser(book.getTitle(), book.getAuthor(), book.getUser())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "This book already exists.");
         }
+        int read = book.getPagesRead();
+        int total = book.getTotalPages();
+        if (read >= total && total > 0) {
+            book.setReadingStatus("Read");
+        } else if (read > 0) {
+            book.setReadingStatus("Reading");
+        } else {
+            book.setReadingStatus("Unread");
+        }
         return bookRepository.save(book);
     }
     public List<Book> getBooksByUser(User user) {
@@ -42,6 +51,15 @@ public class BookService {
     book.setCoverUrl(bookDetails.getCoverUrl());
     book.setReadingStatus(bookDetails.getReadingStatus());
     book.setReReadability(bookDetails.getReReadability());
+    int read = bookDetails.getPagesRead();
+    int total = bookDetails.getTotalPages();
+    if (read >= total && total > 0) {
+        book.setReadingStatus("Read");
+    } else if (read > 0) {
+        book.setReadingStatus("Reading");
+    } else {
+        book.setReadingStatus("Unread");
+    }
     return bookRepository.save(book);
 }
 
@@ -60,7 +78,9 @@ public Book updateCover(Long id, String newCoverUrl) {
     return bookRepository.save(book);
 }
 
-
+public boolean existsByIsbnAndUser(String isbn, User user) {
+    return bookRepository.existsByIsbnAndUserId(isbn, user.getId());
+}
 
 public void deleteBook(Long id) {
     Book book = bookRepository.findById(id).orElseThrow();
