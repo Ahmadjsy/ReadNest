@@ -19,6 +19,19 @@ export class LoginComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
   login(): void {
+    this.error = '';
+
+    if (!this.email || !this.password) {
+      this.error = 'Email and password are required.';
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.email)) {
+      this.error = 'Please enter a valid email address.';
+      return;
+    }
+
     this.authService.login({ email: this.email, password: this.password }).subscribe({
       next: (res) => {
         this.authService.setToken(res.token);

@@ -33,10 +33,10 @@ public class BookController {
     }
 
    @PostMapping(consumes = {"multipart/form-data"})
-public ResponseEntity<?> createBook(
-        @RequestPart("book") Book book,
-        @RequestPart(value = "cover", required = false) MultipartFile coverFile
-) {
+    public ResponseEntity<?> createBook(
+            @RequestPart("book") Book book,
+            @RequestPart(value = "cover", required = false) MultipartFile coverFile
+    ) {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     User user = (User) auth.getPrincipal();
     book.setUser(user);
